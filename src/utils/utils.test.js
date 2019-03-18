@@ -1,5 +1,5 @@
 import getBase64 from './getBase64';
-import { getImageIdFromGridItem } from './index';
+import { getImageIdFromGridItem, generateRandomNumbers } from './index';
 
 describe('base64 Convert Tests', () => {
   test('converts file to base64 correctly', () => {
@@ -36,5 +36,26 @@ describe('getRelocatedGridItems Tests', () => {
     const imageId = getImageIdFromGridItem(gridItem);
     const compareResult = imageId === 10;
     expect(compareResult).toBeFalsy();
+  });
+});
+
+describe('generateRandomNumbers tests', () => {
+  it('should generate unique values', () => {
+    const length1 = 16;
+    const maxValue1 = 16;
+    const length2 = 10;
+    const maxValue2 = 10;
+    const values1 = generateRandomNumbers(length1, maxValue1);
+    const values2 = generateRandomNumbers(length2, maxValue2);
+
+    // If values of the array are unique, sum of the values from array must be equal to `n * (n+1) / 2`
+    // This rule applies only if the length and the max value are equal.
+    const actualSum1 = (length1 * (length1 + 1)) / 2;
+    const expectedSum1 = values1.reduce((partialSum, b) => partialSum + b, 0);
+    expect(actualSum1).toEqual(expectedSum1);
+
+    const actualSum2 = (length2 * (length2 + 1)) / 2;
+    const expectedSum2 = values2.reduce((partialSum, b) => partialSum + b, 0);
+    expect(actualSum2).toEqual(expectedSum2);
   });
 });

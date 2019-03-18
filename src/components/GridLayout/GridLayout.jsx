@@ -1,5 +1,8 @@
 import React from 'react';
 import GridLayout from 'react-grid-layout';
+
+import Rembrandt from 'rembrandt/build/browser';
+
 import { getRelocatedGridItems } from '../../utils';
 
 const BasicGrid = props => {
@@ -7,9 +10,17 @@ const BasicGrid = props => {
   const { layout } = props;
 
   const onLayoutChange = changedLayout => {
-    console.log('onLayChange:', changedLayout);
     const changedGridItems = getRelocatedGridItems(layout, changedLayout, images);
     console.log(changedGridItems);
+    changedGridItems.forEach(item => {
+      const { originalImageData } = item.originalImage;
+      const { newImageData } = item.newImage;
+
+      const rembrandt = new Rembrandt({ imageA: originalImageData, imageB: newImageData });
+      rembrandt.compare().then(response => {
+        console.log('response:', response);
+      });
+    });
   };
 
   return (

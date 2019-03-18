@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Home.css';
 
 import {
+  Button,
   Collapse,
   Navbar,
   NavbarToggler,
@@ -22,18 +23,17 @@ import {
   CustomInput,
 } from 'reactstrap';
 
-import looksame from 'looks-same';
 import { cutImage, getBase64 } from '../../utils';
 import BasicLayout from '../GridLayout/GridLayout';
 
 const Home = () => {
-  const [collapeseOpen, setCollapeseOpen] = useState(false);
+  const [collapse, setCollapseOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [imagePieces, setImagePieces] = useState([]);
   const [onload, setOnload] = useState(false);
   const fileRef = React.createRef();
 
-  const layout = [
+  const originalLayout = [
     { i: '1', w: 1, h: 1, x: 0, y: 0, isResizable: false },
     { i: '2', w: 1, h: 1, x: 1, y: 0, isResizable: false },
     { i: '3', w: 1, h: 1, x: 2, y: 0, isResizable: false },
@@ -52,6 +52,12 @@ const Home = () => {
     { i: '16', w: 1, h: 1, x: 3, y: 3, isResizable: false },
   ];
 
+  // const fakeLayout = []; // TODO: generateRandomNumbers metodu ile fake bir layout oluşturulacak.
+
+  function onShuffle() {
+    console.log('Shuffle');
+  }
+
   function onImageSelect() {
     const file = fileRef.current.files[0];
     console.log('fileRef:', fileRef.current);
@@ -67,7 +73,7 @@ const Home = () => {
         setImagePieces(tempImagePieces);
         console.log('imagePieces: ', imagePieces);
 
-        imagePieces.map((imagePiece, index) => (layout[index].i = imagePiece.key.toString()));
+        imagePieces.map((imagePiece, index) => (originalLayout[index].i = imagePiece.key.toString()));
         console.log('mapWorked');
         setOnload(true);
       };
@@ -78,8 +84,8 @@ const Home = () => {
     <Container>
       <Navbar color="transparent" light expand="md">
         <NavbarBrand href="/">Puzzle Game</NavbarBrand>
-        <NavbarToggler onClick={() => setCollapeseOpen(!collapeseOpen)} />
-        <Collapse isOpen={collapeseOpen} navbar>
+        <NavbarToggler onClick={() => setCollapseOpen(!collapse)} />
+        <Collapse isOpen={collapse} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
               <NavLink href="/components/">Components</NavLink>
@@ -113,7 +119,14 @@ const Home = () => {
           </Form>
         </Col>
       </Row>
-      <Row>{onload ? <BasicLayout layout={layout} images={imagePieces} /> : null}</Row>
+      <Row className="mt-3 mb-4 justify-content-center">
+        <Col xs="auto">
+          <Button disabled={!image} outline color="success" size="lg" onClick={() => onShuffle()}>
+            Shuffle
+          </Button>
+        </Col>
+      </Row>
+      <Row>{onload ? <BasicLayout layout={originalLayout} images={imagePieces} /> : null}</Row>
     </Container>
   );
 };

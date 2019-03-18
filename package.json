@@ -24,6 +24,7 @@
     "react-scripts": "2.1.5",
     "reactn": "~1.0.0",
     "reactstrap": "^7.1.0",
+    "rembrandt": "^0.1.3",
     "use-react-router": "~1.0.3"
   },
   "scripts": {
@@ -31,8 +32,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint '**/*.{js,jsx}' --quiet",
-    "lint-fix": "eslint '**/*.{js,jsx}' --quiet --fix"
+    "lint": "eslint 'src/**/*.{js,jsx}' --quiet",
+    "lint-fix": "eslint 'src/**/*.{js,jsx}' --quiet --fix"
   },
   "devDependencies": {
     "eslint-config-airbnb": "~17.1.0",
@@ -74,6 +75,7 @@
       "react/prop-types": "off",
       "react/forbid-prop-types": "off",
       "react/require-default-props": "off",
+      "consistent-return": "off",
       "no-return-assign": [
         2,
         "except-parens"
