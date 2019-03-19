@@ -1,5 +1,5 @@
 import getBase64 from './getBase64';
-import { getImageIdFromGridItem, generateRandomNumbers } from './index';
+import { getImageIdFromGridItem, generateRandomNumbers, getGridItemFromImageId, generateFakeLayout } from './index';
 
 describe('base64 Convert Tests', () => {
   test('converts file to base64 correctly', () => {
@@ -50,12 +50,60 @@ describe('generateRandomNumbers tests', () => {
 
     // If values of the array are unique, sum of the values from array must be equal to `n * (n+1) / 2`
     // This rule applies only if the length and the max value are equal.
-    const actualSum1 = (length1 * (length1 + 1)) / 2;
-    const expectedSum1 = values1.reduce((partialSum, b) => partialSum + b, 0);
+    const expectedSum1 = (length1 * (length1 + 1)) / 2;
+    const actualSum1 = values1.reduce((partialSum, b) => partialSum + b, 0);
     expect(actualSum1).toEqual(expectedSum1);
 
-    const actualSum2 = (length2 * (length2 + 1)) / 2;
-    const expectedSum2 = values2.reduce((partialSum, b) => partialSum + b, 0);
+    const expectedSum2 = (length2 * (length2 + 1)) / 2;
+    const actualSum2 = values2.reduce((partialSum, b) => partialSum + b, 0);
     expect(actualSum2).toEqual(expectedSum2);
+  });
+});
+
+describe('getImageIdFromGridItem tests', () => {
+  it('should return correct grid items with 3,3', () => {
+    const imageId1 = 16;
+    const gridItem1 = getGridItemFromImageId(imageId1);
+    expect(gridItem1).toEqual({ x: 3, y: 3 });
+  });
+
+  it('should return correct grid items with 0,0', () => {
+    const imageId2 = 1;
+    const gridItem2 = getGridItemFromImageId(imageId2);
+    expect(gridItem2).toEqual({ x: 0, y: 0 });
+  });
+
+  it('should return correct grid items with 3,0', () => {
+    const imageId3 = 4;
+    const gridItem3 = getGridItemFromImageId(imageId3);
+    expect(gridItem3).toEqual({ x: 3, y: 0 });
+  });
+
+  it('should return correct grid items with 2,1', () => {
+    const imageId4 = 7;
+    const gridItem4 = getGridItemFromImageId(imageId4);
+    expect(gridItem4).toEqual({ x: 2, y: 1 });
+  });
+
+  it('should return correct grid items with 1,3', () => {
+    const imageId4 = 14;
+    const gridItem4 = getGridItemFromImageId(imageId4);
+    expect(gridItem4).toEqual({ x: 1, y: 3 });
+  });
+});
+
+describe('generateFakeLayout tests', () => {
+  it('should generate unique gridItem coordinates', () => {
+    const fakeLayout = generateFakeLayout();
+    fakeLayout.forEach(layoutItem => {
+      expect(layoutItem.x).toBeDefined();
+      expect(layoutItem.y).toBeDefined();
+    });
+
+    /**
+     * See {@link https://flaviocopes.com/how-to-get-unique-properties-of-object-in-array Unique properties of a set of objects}
+     */
+    const layoutSet = [...new Set(fakeLayout.map(layoutItem => `${layoutItem.x}-${layoutItem.y}`))];
+    expect(layoutSet.length).toEqual(fakeLayout.length);
   });
 });

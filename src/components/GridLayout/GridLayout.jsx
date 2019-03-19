@@ -6,8 +6,7 @@ import Rembrandt from 'rembrandt/build/browser';
 import { getRelocatedGridItems } from '../../utils';
 
 const BasicGrid = props => {
-  const { images } = props;
-  const { layout } = props;
+  const { images, layout, fakeLayout } = props;
 
   const onLayoutChange = changedLayout => {
     const changedGridItems = getRelocatedGridItems(layout, changedLayout, images);
@@ -26,7 +25,7 @@ const BasicGrid = props => {
   return (
     <GridLayout
       className="layout"
-      layout={layout}
+      layout={fakeLayout}
       cols={5}
       rowHeight={600 / 5}
       margin={[1, 1]}

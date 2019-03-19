@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Home.css';
 
 import {
   Button,
   Collapse,
+  CustomInput,
   Navbar,
   NavbarToggler,
   NavbarBrand,
@@ -20,10 +21,9 @@ import {
   Form,
   FormGroup,
   Label,
-  CustomInput,
 } from 'reactstrap';
 
-import { cutImage, getBase64 } from '../../utils';
+import { cutImage, generateFakeLayout, getBase64 } from '../../utils';
 import BasicLayout from '../GridLayout/GridLayout';
 
 const Home = () => {
@@ -31,7 +31,13 @@ const Home = () => {
   const [image, setImage] = useState(null);
   const [imagePieces, setImagePieces] = useState([]);
   const [onload, setOnload] = useState(false);
+  const [fakeLayout, setFakeLayout] = useState([]);
   const fileRef = React.createRef();
+
+  useEffect(() => {
+    setFakeLayout(generateFakeLayout());
+    console.log('effect run');
+  }, []);
 
   const originalLayout = [
     { i: '1', w: 1, h: 1, x: 0, y: 0, isResizable: false },
@@ -52,29 +58,23 @@ const Home = () => {
     { i: '16', w: 1, h: 1, x: 3, y: 3, isResizable: false },
   ];
 
-  // const fakeLayout = []; // TODO: generateRandomNumbers metodu ile fake bir layout oluşturulacak.
-
   function onShuffle() {
-    console.log('Shuffle');
+    setFakeLayout(generateFakeLayout());
+    console.log(fakeLayout);
   }
 
   function onImageSelect() {
     const file = fileRef.current.files[0];
-    console.log('fileRef:', fileRef.current);
 
     getBase64(file, result => {
-      console.log('result:', result);
-
       const tempImage = new Image();
       tempImage.src = result;
       tempImage.onload = () => {
         setImage(tempImage.src);
         const tempImagePieces = cutImage(tempImage, 4, 4);
         setImagePieces(tempImagePieces);
-        console.log('imagePieces: ', imagePieces);
 
         imagePieces.map((imagePiece, index) => (originalLayout[index].i = imagePiece.key.toString()));
-        console.log('mapWorked');
         setOnload(true);
       };
     });
@@ -120,13 +120,13 @@ const Home = () => {
         </Col>
       </Row>
       <Row className="mt-3 mb-4 justify-content-center">
-        <Col xs="auto">
-          <Button disabled={!image} outline color="success" size="lg" onClick={() => onShuffle()}>
+        <Col className="w-100" xs="auto">
+          <Button disabled={!image} className="w-100" outline color="success" size="lg" onClick={() => onShuffle()}>
             Shuffle
           </Button>
         </Col>
       </Row>
-      <Row>{onload ? <BasicLayout layout={originalLayout} images={imagePieces} /> : null}</Row>
+      <Row>{onload ? <BasicLayout layout={originalLayout} fakeLayout={fakeLayout} images={imagePieces} /> : null}</Row>
     </Container>
   );
 };

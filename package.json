@@ -76,6 +76,7 @@
       "react/forbid-prop-types": "off",
       "react/require-default-props": "off",
       "consistent-return": "off",
+      "no-proto": "off",
       "no-return-assign": [
         2,
         "except-parens"
