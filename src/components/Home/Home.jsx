@@ -32,11 +32,9 @@ const Home = () => {
   const [imagePieces, setImagePieces] = useState([]);
   const [onload, setOnload] = useState(false);
   const [fakeLayout, setFakeLayout] = useState([]);
-  const fileRef = React.createRef();
 
   useEffect(() => {
     setFakeLayout(generateFakeLayout());
-    console.log('effect run');
   }, []);
 
   const originalLayout = [
@@ -58,15 +56,21 @@ const Home = () => {
     { i: '16', w: 1, h: 1, x: 3, y: 3, isResizable: false },
   ];
 
-  function onShuffle() {
-    setFakeLayout(generateFakeLayout());
-    console.log(fakeLayout);
+  function setGeneratedFakeLayout(generatedFakeLayout) {
+    setFakeLayout(generatedFakeLayout);
+    setOnload(false);
+    setTimeout(() => {
+      setOnload(true);
+    }, 100);
   }
 
-  function onImageSelect() {
-    const file = fileRef.current.files[0];
+  function onShuffle() {
+    const generatedFakeLayout = generateFakeLayout();
+    setGeneratedFakeLayout(generatedFakeLayout);
+  }
 
-    getBase64(file, result => {
+  function onImageSelect(event) {
+    getBase64(event.target.files[0], result => {
       const tempImage = new Image();
       tempImage.src = result;
       tempImage.onload = () => {
@@ -114,19 +118,19 @@ const Home = () => {
           <Form>
             <FormGroup>
               <Label for="exampleCustomFileBrowser">Please select image!</Label>
-              <CustomInput type="file" id="exampleCustomFileBrowser" name="customFile" innerRef={fileRef} onChange={() => onImageSelect()} />
+              <CustomInput type="file" id="exampleCustomFileBrowser" name="customFile" onChange={event => onImageSelect(event)} />
             </FormGroup>
           </Form>
         </Col>
       </Row>
       <Row className="mt-3 mb-4 justify-content-center">
-        <Col className="w-100" xs="auto">
-          <Button disabled={!image} className="w-100" outline color="success" size="lg" onClick={() => onShuffle()}>
-            Shuffle
-          </Button>
-        </Col>
+        <Button disabled={!image} className="mx-auto w-50" outline color="success" size="lg" onClick={() => onShuffle()}>
+          Shuffle
+        </Button>
       </Row>
-      <Row>{onload ? <BasicLayout layout={originalLayout} fakeLayout={fakeLayout} images={imagePieces} /> : null}</Row>
+      <Row style={{ marginLeft: '300px' }}>
+        {onload ? <BasicLayout layout={originalLayout} fakeLayout={fakeLayout} images={imagePieces} firstTimeProp /> : null}
+      </Row>
     </Container>
   );
 };
